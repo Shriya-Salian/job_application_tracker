@@ -9,10 +9,39 @@
 </head>
 <body>
     <h1>Job Application Tracker!!!</h1>
-    <form method="post">
-        <input type="text" name = "url" placeholder="Paste job link here" required>
-        <button type "submit">Add job</button>
+    <form method="POST">
+        <input type="text" name = "url" placeholder="Copy and Paste job links" required>
+        <button type = "submit">Add Job</button>
     </form>
-     
+    <table>
+  <tr>
+    <th>S.No</th>
+    <th>Title</th>
+    <th>Company</th>
+    <th>URL</th>
+    <th>Job ID</th>
+    <th>Status</th>
+  </tr>
+
+  {% for job in jobs %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ job.title }}</td>
+      <td>{{ job.company }}</td>
+      <td><a href="{{ job.url }}" target="_blank">{{ job.url }}</a></td>
+      <td><code>{{ job._id }}</code></td>
+      <td>
+        <form action="{{ url_for('update_status', job_id=job._id) }}" method="POST">
+          <select name="status" onchange="this.form.submit()">
+            <option value="Not Applied" {% if job.status == "Not Applied" %}selected{% endif %}>Not Applied</option>
+            <option value="Applied" {% if job.status == "Applied" %}selected{% endif %}>Applied</option>
+            <option value="Referred" {% if job.status == "Referred" %}selected{% endif %}>Referred</option>
+          </select>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+    
 </body>
 </html>
