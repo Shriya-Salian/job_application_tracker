@@ -1,47 +1,56 @@
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
-    <lang="en"></lang>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Application Tracker</title>
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <title>Job Application Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Job Application Tracker!!!</h1>
-    <form method="POST">
-        <input type="text" name = "url" placeholder="Copy and Paste job links" required>
-        <button type = "submit">Add Job</button>
-    </form>
-    <table>
-  <tr>
-    <th>S.No</th>
-    <th>Title</th>
-    <th>Company</th>
-    <th>URL</th>
-    <th>Job ID</th>
-    <th>Status</th>
-  </tr>
 
-  {% for job in jobs %}
+<div class="container">
+  <h1>Job Application Tracker</h1>
+
+  <form method="POST">
+    <input type="text" name="url" placeholder="Paste job link here..." required />
+    <button type="submit">Add Job</button>
+  </form>
+
+  <table>
     <tr>
-      <td>{{ loop.index }}</td>
-      <td>{{ job.title }}</td>
-      <td>{{ job.company }}</td>
-      <td><a href="{{ job.url }}" target="_blank">{{ job.url }}</a></td>
-      <td><code>{{ job._id }}</code></td>
-      <td>
-        <form action="{{ url_for('update_status', job_id=job._id) }}" method="POST">
-          <select name="status" onchange="this.form.submit()">
-            <option value="Not Applied" {% if job.status == "Not Applied" %}selected{% endif %}>Not Applied</option>
-            <option value="Applied" {% if job.status == "Applied" %}selected{% endif %}>Applied</option>
-            <option value="Referred" {% if job.status == "Referred" %}selected{% endif %}>Referred</option>
-          </select>
-        </form>
-      </td>
+      <th>S.No</th>
+      <th>Title</th>
+      <th>Company</th>
+      <th>URL</th>
+      <th>Job ID</th>
+      <th>Status</th>
+      <th>Action</th>
     </tr>
-  {% endfor %}
-</table>
-    
+    {% for job in jobs %}
+  <tr>
+    <td data-label="S.No">{{ loop.index }}</td>
+    <td data-label="Title">{{ job.title }} <em style="color: #888;">({{ job.source }})</em></td>
+    <td data-label="Company">{{ job.company }}</td>
+    <td data-label="URL" class="url-cell"><a href="{{ job.url }}" target="_blank">{{ job.url }}</a></td>
+    <td data-label="Job ID"><code>{{ job.job_id or '-' }}</code></td>
+    <td data-label="Status">
+      <form action="{{ url_for('update_status', job_id=job._id) }}" method="POST">
+        <select name="status" onchange="this.form.submit()">
+          <option value="Not Applied" {% if job.status == "Not Applied" %}selected{% endif %}>Not Applied</option>
+          <option value="Applied" {% if job.status == "Applied" %}selected{% endif %}>Applied</option>
+          <option value="Referred" {% if job.status == "Referred" %}selected{% endif %}>Referred</option>
+        </select>
+      </form>
+    </td>
+    <td data-label="Action">
+      <form action="{{ url_for('delete_job', job_id=job._id) }}" method="POST">
+        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+      </form>
+    </td>
+  </tr>
+{% endfor %}
+  </table>
+</div>
+
 </body>
 </html>
