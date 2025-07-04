@@ -1,0 +1,34 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+
+# Python environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+ENV/
+
+# Dependencies
+
+Pipfile
+Pipfile.lock
+
+# MongoDB data (if running locally)
+/data/db/
+
+# IDE config files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs and cache
+*.log
+*.pot
+*.pyc
+__pycache__
